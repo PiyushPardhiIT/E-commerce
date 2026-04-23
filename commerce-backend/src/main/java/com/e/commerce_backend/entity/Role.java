@@ -1,4 +1,8 @@
 package com.e.commerce_backend.entity;
 
-public class Role {
+public enum Role {
+        SUPER_ADMIN,
+        ADMIN,
+        SELLER,
+        CUSTOMER
 }
