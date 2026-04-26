@@ -2,19 +2,14 @@ package com.e.commerce_backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cart_items")
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EntityListeners(AuditingEntityListener.class)
 public class CartItem {
 
     @Id
@@ -22,19 +17,21 @@ public class CartItem {
     private Long id;
 
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
-    @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime addedAt;
 
-    // ── Relationships ──────────────────────────────────────────
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @PrePersist
+    protected void onCreate() {
+        addedAt = LocalDateTime.now();
+    }
 }
